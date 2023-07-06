@@ -1,6 +1,5 @@
 from django.db import models
 
-
 from social_media_api import settings
 
 
