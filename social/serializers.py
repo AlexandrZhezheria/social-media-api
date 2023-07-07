@@ -19,12 +19,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             "posts_count",
         )
 
-    @staticmethod
-    def get_followers_count(obj):
-        return obj.user.followers.count()
+    def get_followers_count(self, obj):
+        return obj.following.count()
 
-    @staticmethod
-    def get_posts_count(obj):
+    def get_posts_count(self, obj):
         return obj.posts.count()
 
 
@@ -55,17 +53,11 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             "followers",
         )
 
-    @staticmethod
-    def get_followers(obj):
-        return [
-            followed_user.full_name for followed_user in obj.user.followers.all()
-        ]
+    def get_followers(self, obj):
+        return list(obj.followers.all().values_list('full_name', flat=True))
 
-    @staticmethod
-    def get_following(obj):
-        return [
-            following_user.profiles.full_name for following_user in obj.following.all()
-        ]
+    def get_following(self, obj):
+        return list(obj.following.all().values_list('profiles__full_name', flat=True))
 
 
 class ProfileCreateUpdateSerializer(serializers.ModelSerializer):
@@ -83,6 +75,7 @@ class ProfileCreateUpdateSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source="profile.full_name")
+
     class Meta:
         model = Post
         fields = (

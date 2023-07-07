@@ -9,9 +9,6 @@ class Profile(models.Model):
         MALE = "Male"
         UNKNOWN = "unknown"
 
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profiles"
-    )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     avatar = models.URLField(max_length=255, blank=True)
@@ -22,7 +19,7 @@ class Profile(models.Model):
     )
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return f"{self.first_name} {self.last_name}"
 
     @property
     def full_name(self):
